@@ -1,0 +1,19 @@
+{
+    "name": "benedicte/quete_simple_mvc",
+    "authors": [
+        {
+            "name": "Bénédicte",
+            "email": "woelffel.benedicte@yahoo.fr"
+        }
+    ],
+    "require": {
+        "nikic/fast-route": "^1.3",
+        "twig/twig": "^2.5"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    }
+}
