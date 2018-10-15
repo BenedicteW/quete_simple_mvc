@@ -1,11 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Benedicte
- * Date: 08/10/2018
- * Time: 15:35
- */
-
+// app/dispatcher.php
 require_once __DIR__ . '/routing.php';
 $routesCollection = function (FastRoute\RouteCollector $r) use ($routes) {
     foreach ($routes as $controller => $actions) {

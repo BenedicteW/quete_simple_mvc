@@ -8,26 +8,38 @@
 
 namespace Model;
 
-require __DIR__ . '/../../app/db.php';
+use Model\Category;
 
-class CategoryManager
+class CategoryManager extends AbstractManager
 {
-    public function selectAllCategories() :array
+    const TABLE = 'category';
+
+    public function __construct($pdo)
     {
-        $pdo = new \PDO(DSN, USER, PASS);
-        $query = "SELECT * FROM categories";
-        $res = $pdo->query($query);
-        return $res->fetchAll();
+        parent::__construct(self::TABLE, $pdo);
     }
 
-    public function selectOneCategory(int $id) : array
+    public function insert($category): int
     {
-        $pdo = new \PDO(DSN, USER, PASS);
-        $query = "SELECT * FROM categories WHERE id = :id";
-        $statement = $pdo->prepare($query);
-        $statement->bindValue(':id', $id, \PDO::PARAM_INT);
-        $statement->execute();
-        // contrairement à fetchAll(), fetch() ne renvoie qu'un seul résultat
-        return $statement->fetch();
+        $statement = $this->pdo->prepare("INSERT INTO " . self::TABLE . " (`name`) VALUES (:name)");
+        $statement->bindValue('name', $category->getName(), \PDO::PARAM_STR);
+        if ($statement->execute()) {
+            return $this->pdo->lastInsertId();
+        }
+    }
+
+    public function update($category) //requête SQL d'insertion pour éditer.
+    {
+        $statement = $this->pdo->prepare("UPDATE " . self::TABLE ." SET category.`name` = :name WHERE category.`id` = :id"); //UPDATE ... SET = syntaxe SQL pour éditer
+        $statement->bindValue('name', $category->getName(), \PDO::PARAM_STR); //On associe la nouvelle valeur au paramètre
+        $statement->bindValue('id', $category->getId(), \PDO::PARAM_INT); //On associe la nouvelle valeur au paramètre
+        return $statement->execute();
+    }
+
+    public function delete($category) //requête SQL pour supprimer.
+    {
+        $statement = $this->pdo->prepare("DELETE FROM " . self::TABLE . " WHERE `id` = :id");
+        $statement->bindValue('id', $category->getId(), \PDO::PARAM_INT);
+        return $statement->execute();
     }
 }
